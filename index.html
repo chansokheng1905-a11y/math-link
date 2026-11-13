@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>មជ្ឈមណ្ឌលប្រមូលផ្តុំលីងតេស្ត និងមេរៀនគណិតវិទ្យា - លោកគ្រូ ចាន់ សុខហេង</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Kantumruy Pro, Moul, & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Moul&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SortableJS for Smooth Drag & Drop (Desktop & Mobile Touch) -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+    <!-- Firebase SDKs for Cloud Sync across all devices -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Kantumruy Pro"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        moul: ['"Moul"', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                            950: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .bg-luxury-dark {
+            background: radial-gradient(circle at 50% 10%, #1c1408 0%, #0d0b07 55%, #050402 100%);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef08a 0%, #facc15 35%, #eab308 60%, #ca8a04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-card {
+            background: linear-gradient(145deg, rgba(30, 24, 15, 0.90) 0%, rgba(15, 12, 7, 0.95) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(254, 240, 138, 0.15);
+            backdrop-filter: blur(16px);
+        }
+        .gold-card:hover {
+            border-color: rgba(250, 204, 21, 0.75);
+            box-shadow: 0 12px 35px rgba(234, 179, 8, 0.18), inset 0 1px 1px rgba(254, 240, 138, 0.3);
+        }
+        .gold-button {
+            background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #b45309 100%);
+            color: #1c1408;
+            box-shadow: 0 4px 15px rgba(202, 138, 4, 0.35);
+            transition: all 0.25s ease;
+        }
+        .gold-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(202, 138, 4, 0.55);
+            filter: brightness(1.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.03);
+        }
+        .sortable-ghost {
+            opacity: 0.35;
+            border: 2px dashed #facc15 !important;
+            background: rgba(234, 179, 8, 0.15) !important;
+            transform: scale(0.98);
+        }
+        .sortable-chosen {
+            box-shadow: 0 20px 45px rgba(234, 179, 8, 0.35) !important;
+            border-color: #fde047 !important;
+            z-index: 30;
+        }
+        .drag-handle {
+            cursor: grab;
+            touch-action: none;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(234, 179, 8, 0.4);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-luxury-dark text-slate-100 min-h-screen font-sans flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-black/60 backdrop-blur-xl border-b border-amber-500/20 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-700 p-0.5 shadow-lg shadow-amber-500/20 shrink-0">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-amber-400 text-lg font-bold">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-bold text-base sm:text-lg leading-tight gold-gradient-text">
+                            MathLink Hub Pro
+                        </h1>
+                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Cloud Sync
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-amber-200/70 font-medium">
+                        វិទ្យាល័យ ជា ស៊ីម ឈូកវ៉ា • គ្រូបង្រៀន៖ <strong class="text-amber-400">លោកគ្រូ ចាន់ សុខហេង</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Teacher Admin Mode Toggle -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAdminMode()" id="btnAdminToggle" class="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 transition">
+                    <i id="adminLockIcon" class="fa-solid fa-lock"></i>
+                    <span id="adminBtnText">គ្រប់គ្រងលីង (គ្រូ)</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+        <!-- Hero Welcome & Cascading Filter Panel -->
+        <div class="gold-card rounded-[2rem] p-5 sm:p-8 space-y-6 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-amber-500/20 pb-5">
+                <div class="space-y-1">
+                    <span class="text-[11px] font-bold uppercase tracking-widest text-amber-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group"></i> ប្រព័ន្ធស្វែងរកតេស្ត និងមេរៀនរហ័ស
+                    </span>
+                    <h2 class="font-moul text-lg sm:text-2xl text-white leading-relaxed">
+                        បណ្ណាល័យលីងតេស្តគណិតវិទ្យា
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        សូមជ្រើសរើស <strong class="text-amber-300">ថ្នាក់ទី</strong> &rarr; <strong class="text-amber-300">មេរៀន</strong> &rarr; និង <strong class="text-amber-300">ចំណុចរង</strong> ខាងក្រោមដើម្បីចូលធ្វើតេស្ត
+                    </p>
+                </div>
+
+                <!-- Teacher Add New Link Button & Drag Hint (Visible only in Admin Mode) -->
+                <div id="adminAddBar" class="hidden flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+                    <span class="px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-200 text-[11px] font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-grip-vertical text-amber-400"></i>
+                        <span>ចាប់អូសកាត ឬចុចព្រួញ ◀ ▶ ដើម្បីរៀបលំដាប់</span>
+                    </span>
+                    <button onclick="openAddLinkModal()" class="gold-button px-5 py-3 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                        <span>បន្ថែមលីងតេស្តថ្មី</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3-Step Cascading Selectors -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <!-- Step 1: ជម្រើសថ្នាក់ទី -->
+                <div class="bg-black/50 p-4 rounded-2xl border border-amber-500/30 space-y-2">
+                    <label class="text-xs font-bold text-amber-300 flex items-center justify-between">
+                        <span><span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 inline-flex items-center justify-center text-[10px] mr-1.5 border border-amber-400/40">១</span>ជ្រើសរើសថ្នាក់ទី</span>
+                        <i class="fa-solid fa-graduation-cap text-amber-500/60"></i>
+                    </label>
+                    <select id="selectGrade" onchange="onGradeChange()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer">
+                        <option value="all">🌟 គ្រប់កម្រិតថ្នាក់ទាំងអស់</option>
+                    </select>
+                </div>
+
+                <!-- Step 2: ជម្រើសមេរៀន -->
+                <div class="bg-black/50 p-4 rounded-2xl border border-amber-500/30 space-y-2">
+                    <label class="text-xs font-bold text-amber-300 flex items-center justify-between">
+                        <span><span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 inline-flex items-center justify-center text-[10px] mr-1.5 border border-amber-400/40">២</span>ជ្រើសរើសមេរៀន</span>
+                        <i class="fa-solid fa-book-open text-amber-500/60"></i>
+                    </label>
+                    <select id="selectLesson" onchange="onLessonChange()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer">
+                        <option value="all">📚 គ្រប់មេរៀនទាំងអស់</option>
+                    </select>
+                </div>
+
+                <!-- Step 3: ជម្រើសចំណុច -->
+                <div class="bg-black/50 p-4 rounded-2xl border border-amber-500/30 space-y-2">
+                    <label class="text-xs font-bold text-amber-300 flex items-center justify-between">
+                        <span><span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 inline-flex items-center justify-center text-[10px] mr-1.5 border border-amber-400/40">៣</span>ជ្រើសរើសចំណុចរង</span>
+                        <i class="fa-solid fa-bullseye text-amber-500/60"></i>
+                    </label>
+                    <select id="selectSubtopic" onchange="renderLinksGrid()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer">
+                        <option value="all">🎯 គ្រប់ចំណុចទាំងអស់</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Search & Reset Filter Bar -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-xs text-amber-400/70"></i>
+                    <input type="text" id="searchInput" oninput="renderLinksGrid()" placeholder="វាយស្វែងរកឈ្មោះមេរៀន ឬចំណុច..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-black/50 border border-amber-500/30 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                </div>
+                <div class="flex items-center gap-3 text-xs w-full sm:w-auto justify-between sm:justify-end">
+                    <span class="text-slate-400">លទ្ធផលបង្ហាញ៖ <strong id="visibleCountBadge" class="text-amber-400 font-bold">0</strong> លីង</span>
+                    <button onclick="resetAllFilters()" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-semibold transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> បង្ហាញទាំងអស់
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links Cards Grid -->
+        <div id="linksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Dynamic Link Cards will render here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyNotice" class="gold-card rounded-3xl p-12 text-center hidden space-y-3">
+            <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">មិនទាន់មានលីងសម្រាប់ជម្រើសនេះនៅឡើយទេ</h3>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">
+                សូមជ្រើសរើសថ្នាក់ទី មេរៀន ឬចំណុចផ្សេងទៀត ឬចុចប៊ូតុង «បង្ហាញទាំងអស់» ដើម្បីមើលលីងទាំងអស់។
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Modal 1: Add / Edit Link (Teacher Admin) -->
+    <div id="linkModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="gold-card border border-amber-400/50 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-amber-500/20 pb-3">
+                <h3 id="modalTitle" class="text-base font-bold text-amber-300 flex items-center gap-2">
+                    <i class="fa-solid fa-link"></i> បន្ថែមលីងតេស្ត / មេរៀនថ្មី
+                </h3>
+                <button onclick="closeLinkModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="linkForm" onsubmit="handleSaveLink(event)" class="space-y-3.5 text-xs">
+                <input type="hidden" id="editLinkId">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-amber-200 font-semibold mb-1">ថ្នាក់ទី <span class="text-rose-400">*</span></label>
+                        <input type="text" id="inputGrade" list="gradeSuggestions" required placeholder="ឧ. ថ្នាក់ទី ៨" class="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <datalist id="gradeSuggestions">
+                            <option value="ថ្នាក់ទី ៧">
+                            <option value="ថ្នាក់ទី ៨">
+                            <option value="ថ្នាក់ទី ៩">
+                            <option value="ថ្នាក់ទី ១០">
+                            <option value="ថ្នាក់ទី ១១">
+                            <option value="ថ្នាក់ទី ១២">
+                        </datalist>
+                    </div>
+                    <div>
+                        <label class="block text-amber-200 font-semibold mb-1">ប្រភេទតំណភ្ជាប់</label>
+                        <select id="inputType" class="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-amber-300 font-semibold focus:outline-none">
+                            <option value="quiz">📝 កម្មវិធីធ្វើតេស្ត (Quiz App)</option>
+                            <option value="portal">💳 ប្រព័ន្ធសិស្ស & វិក្កយបត្រ</option>
+                            <option value="collector">📊 ផ្ទាំងប្រមូលពិន្ទុគ្រូ</option>
+                            <option value="lesson">📖 ឯកសារមេរៀន / ស្លាយ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="relative" id="lessonDropdownContainer">
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-amber-200 font-semibold">មេរៀន (Lesson) <span class="text-rose-400">*</span></label>
+                        <button type="button" onclick="openManageLessonsModal()" class="text-[11px] font-bold text-amber-300 hover:text-amber-200 bg-amber-500/15 hover:bg-amber-500/25 px-2.5 py-0.5 rounded-lg border border-amber-400/30 flex items-center gap-1 transition">
+                            <i class="fa-solid fa-sliders"></i>
+                            <span>កំណត់ / Edit បញ្ជីមេរៀន</span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="inputLesson" autocomplete="off" required onclick="toggleLessonDropdown(true)" oninput="filterLessonDropdown()" placeholder="ជ្រើសរើស ឬវាយបញ្ចូលឈ្មោះមេរៀន..." class="w-full pl-3 pr-9 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <button type="button" onclick="toggleLessonDropdown()" class="absolute right-2.5 top-2.5 text-amber-400 hover:text-amber-200 px-1">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Custom Interactive Lesson Dropdown Menu (Replaces browser white autofill box) -->
+                    <div id="customLessonMenu" class="hidden absolute left-0 right-0 mt-1.5 bg-slate-900 border border-amber-400/50 rounded-2xl shadow-2xl z-30 overflow-hidden">
+                        <div class="px-3 py-2 bg-amber-500/15 border-b border-amber-500/20 flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-amber-300"><i class="fa-solid fa-book-open mr-1"></i>បញ្ជីមេរៀនដែលបានរក្សាទុក</span>
+                            <button type="button" onclick="toggleLessonDropdown(false)" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div id="customLessonList" class="max-h-44 overflow-y-auto divide-y divide-white/5 custom-scrollbar">
+                            <!-- Dynamic lessons rendered here -->
+                        </div>
+                        <div class="p-2 bg-black/50 border-t border-amber-500/20 flex items-center gap-1.5">
+                            <input type="text" id="quickAddLessonInput" placeholder="បន្ថែមមេរៀនថ្មីរហ័ស..." class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-800 border border-amber-500/30 text-white text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-400">
+                            <button type="button" onclick="quickAddLessonFromDropdown()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] transition shrink-0">
+                                <i class="fa-solid fa-plus"></i> បន្ថែម
+                            </button>
+                            <button type="button" onclick="openManageLessonsModal()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold text-[11px] transition shrink-0" title="កែប្រែ ឬលុបមេរៀន">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-amber-200 font-semibold mb-1">ចំណុចរង / ឈ្មោះតេស្ត (Subtopic) <span class="text-rose-400">*</span></label>
+                    <input type="text" id="inputSubtopic" required placeholder="ឧ. ២.១ ការប្រៀបធៀបចំនួនសនិទាន" class="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+                </div>
+
+                <div>
+                    <label class="block text-amber-200 font-semibold mb-1">តំណភ្ជាប់ (URL Link) <span class="text-rose-400">*</span></label>
+                    <input type="url" id="inputUrl" required placeholder="https://chansokheng1905-a11y.github.io/..." class="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-emerald-300 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-amber-400">
+                </div>
+
+                <div>
+                    <label class="block text-amber-200 font-semibold mb-1">ការពិពណ៌នាសង្ខេប (ស្រេចចិត្ត)</label>
+                    <input type="text" id="inputDesc" placeholder="ឧ. តេស្ត ១៥ លំហាត់ មាន ៣ កម្រិត និងបណ្ណសរសើរ..." class="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-slate-300 focus:outline-none">
+                </div>
+
+                <div class="flex gap-2 pt-3">
+                    <button type="button" id="btnModalDelete" onclick="deleteFromEditModal()" class="hidden px-3.5 py-2.5 rounded-xl border border-rose-800/70 bg-rose-950/50 hover:bg-rose-900/70 text-rose-400 font-bold transition" title="លុបលីងនេះចោល">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                    <button type="button" onclick="closeLinkModal()" class="flex-1 py-2.5 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold">បោះបង់</button>
+                    <button type="submit" class="flex-1 gold-button py-2.5 rounded-xl font-bold shadow-md">រក្សាទុកលើ Cloud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Teacher PIN Authentication -->
+    <div id="adminPinModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="gold-card border border-amber-400/50 rounded-3xl max-w-xs w-full p-6 shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-400/30 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-white">ផ្ទៀងផ្ទាត់សិទ្ធិគ្រូបង្រៀន</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">វាយលេខកូដ PIN ដើម្បីបន្ថែម ឬកែប្រែលីង (លំនាំដើម៖ 1234)</p>
+            </div>
+            <input type="password" id="adminPinInput" maxlength="4" onkeyup="if(event.key==='Enter') verifyAdminPin()" placeholder="••••" class="w-full py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-center text-lg font-mono tracking-widest text-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <div class="flex gap-2">
+                <button onclick="closeAdminPinModal()" class="flex-1 py-2 rounded-xl border border-slate-700 text-slate-400 text-xs font-semibold hover:bg-slate-800">បោះបង់</button>
+                <button onclick="verifyAdminPin()" class="flex-1 gold-button py-2 rounded-xl text-xs font-bold">បញ្ជាក់</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Manage Lessons (Add / Edit / Delete Lesson Names) -->
+    <div id="manageLessonsModal" class="fixed inset-0 z-[60] bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="gold-card border border-amber-400/60 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-amber-500/20 pb-3 shrink-0">
+                <h3 class="text-base font-bold text-amber-300 flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark"></i> កំណត់ និងកែសម្រួលបញ្ជីមេរៀន
+                </h3>
+                <button onclick="closeManageLessonsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Add New Lesson Form -->
+            <div class="space-y-1.5 shrink-0">
+                <label class="block text-[11px] font-semibold text-amber-200">បញ្ចូលឈ្មោះមេរៀនថ្មី៖</label>
+                <div class="flex gap-2">
+                    <input type="text" id="newLessonNameInput" onkeyup="if(event.key==='Enter') addNewLessonOption()" placeholder="ឧ. មេរៀនទី៣៖ ទំហំសមាមាត្រ និងភាគរយ" class="flex-1 px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    <button type="button" onclick="addNewLessonOption()" class="gold-button px-4 py-2.5 rounded-xl font-bold text-xs shrink-0 flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> បន្ថែម
+                    </button>
+                </div>
+            </div>
+
+            <!-- Saved Lessons List with Inline Edit & Delete -->
+            <div class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar" id="manageLessonsList">
+                <!-- Dynamic list rendered here -->
+            </div>
+
+            <div class="pt-2 border-t border-amber-500/20 flex justify-end shrink-0">
+                <button type="button" onclick="closeManageLessonsModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition">
+                    រួចរាល់ (បិទ)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-amber-500/10 py-3.5 text-center text-[11px] text-slate-500 bg-black/40">
+        មជ្ឈមណ្ឌលប្រមូលផ្តុំលីងគណិតវិទ្យា • រៀបរៀងដោយ <span class="text-amber-400/80 font-semibold">លោកគ្រូ ចាន់ សុខហេង</span> (វិទ្យាល័យ ជា ស៊ីម ឈូកវ៉ា)
+    </footer>
+
+    <script>
+        // Connect to Firebase of Teacher Chan Sokheng
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBTmY6YKLmpQ4mqAZm96P39IYtR4uQvtE",
+            authDomain: "my-planner-app-e9576.firebaseapp.com",
+            projectId: "my-planner-app-e9576",
+            storageBucket: "my-planner-app-e9576.firebasestorage.app",
+            messagingSenderId: "820137960838",
+            appId: "1:820137960838:web:df39f02662e2aff521b807",
+            measurementId: "G-9LCSDVH7C5"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        const COLLECTION_NAME = 'math_links_hub';
+        const LESSONS_DOC_REF = db.collection('math_hub_settings').doc('lesson_options');
+        const defaultLessonsList = [
+            "មេរៀនទី១៖ ចំនួនសនិទាន",
+            "មេរៀនទី២៖ ស្វ័យគុណ",
+            "មេរៀនទី៣៖ ទំហំសមាមាត្រ និងភាគរយ",
+            "មេរៀនទី៤៖ កន្សោមពីជគណិត",
+            "ប្រព័ន្ធគ្រប់គ្រងទូទៅ"
+        ];
+        let savedLessonOptions = [...defaultLessonsList];
+        let allLinks = [];
+        let isAdmin = false;
+        let pendingEditId = null;
+
+        // Default Initial Links (if Cloud is empty on first load)
+        const starterLinks = [
+            {
+                grade: "ថ្នាក់ទី ៨",
+                lesson: "មេរៀនទី១៖ ចំនួនសនិទាន",
+                subtopic: "២.១ ការប្រៀបធៀបចំនួនសនិទាន",
+                type: "quiz",
+                url: "https://chansokheng1905-a11y.github.io/",
+                desc: "តេស្តសមត្ថភាព ១៥ លំហាត់ (៣ កម្រិត) មាន Hint ៣ ដង និងបណ្ណសរសើរ",
+                createdAt: new Date().toISOString()
+            },
+            {
+                grade: "ថ្នាក់ទី ៨",
+                lesson: "មេរៀនទី១៖ ចំនួនសនិទាន",
+                subtopic: "២.២ ការរៀបលំដាប់ចំនួនសនិទាន",
+                type: "quiz",
+                url: "https://chansokheng1905-a11y.github.io/",
+                desc: "តេស្តរៀបលំដាប់ចំនួនសនិទានពីតូចទៅធំ ១៥ លំហាត់ ជាមួយប្រព័ន្ធការពារការលួចចម្លង",
+                createdAt: new Date().toISOString()
+            },
+            {
+                grade: "ថ្នាក់ទី ៨",
+                lesson: "មេរៀនទី១៖ ចំនួនសនិទាន",
+                subtopic: "៣. ប្រមាណវិធីបូក និងដកចំនួនសនិទាន",
+                type: "quiz",
+                url: "https://chansokheng1905-a11y.github.io/",
+                desc: "តេស្តគណនាផលបូក និងផលដកចំនួនសនិទាន ទាំងភាគបែងដូចគ្នា និងខុសគ្នា",
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            listenToLessonOptions();
+            listenToLinks();
+        });
+
+        // ================= FIRESTORE REAL-TIME LISTENER =================
+        let sortableInstance = null;
+
+        function listenToLinks() {
+            db.collection(COLLECTION_NAME)
+                .onSnapshot(async snapshot => {
+                    if (snapshot.empty) {
+                        // Seed starter links once if completely empty
+                        const batch = db.batch();
+                        starterLinks.forEach((item, idx) => {
+                            const ref = db.collection(COLLECTION_NAME).doc();
+                            batch.set(ref, { ...item, order: idx });
+                        });
+                        await batch.commit();
+                        return;
+                    }
+
+                    allLinks = [];
+                    snapshot.forEach(doc => {
+                        allLinks.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    // Sort by `order` ascending, then fallback to `createdAt`
+                    allLinks.sort((a, b) => {
+                        const orderA = (typeof a.order === 'number') ? a.order : 999999;
+                        const orderB = (typeof b.order === 'number') ? b.order : 999999;
+                        if (orderA !== orderB) return orderA - orderB;
+                        return (a.createdAt || '').localeCompare(b.createdAt || '');
+                    });
+
+                    populateGradeDropdown();
+                    renderLinksGrid();
+                }, err => {
+                    console.error("Firestore error:", err);
+                });
+        }
+
+        // ================= 3-STEP CASCADING DROPDOWNS =================
+        function populateGradeDropdown() {
+            const gradeSelect = document.getElementById('selectGrade');
+            const currentVal = gradeSelect.value;
+
+            const uniqueGrades = Array.from(new Set(allLinks.map(l => l.grade.trim()))).filter(Boolean);
+
+            gradeSelect.innerHTML = '<option value="all">🌟 គ្រប់កម្រិតថ្នាក់ទាំងអស់</option>';
+            uniqueGrades.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                if (g === currentVal) opt.selected = true;
+                gradeSelect.appendChild(opt);
+            });
+
+            populateLessonDropdown();
+        }
+
+        function onGradeChange() {
+            document.getElementById('selectLesson').value = 'all';
+            document.getElementById('selectSubtopic').value = 'all';
+            populateLessonDropdown();
+            renderLinksGrid();
+        }
+
+        function populateLessonDropdown() {
+            const selectedGrade = document.getElementById('selectGrade').value;
+            const lessonSelect = document.getElementById('selectLesson');
+            const currentLesson = lessonSelect.value;
+
+            let filteredByGrade = allLinks;
+            if (selectedGrade !== 'all') {
+                filteredByGrade = allLinks.filter(l => l.grade.trim() === selectedGrade);
+            }
+
+            const uniqueLessons = Array.from(new Set(filteredByGrade.map(l => l.lesson.trim()))).filter(Boolean);
+
+            lessonSelect.innerHTML = '<option value="all">📚 គ្រប់មេរៀនទាំងអស់</option>';
+            uniqueLessons.forEach(les => {
+                const opt = document.createElement('option');
+                opt.value = les;
+                opt.textContent = les;
+                if (les === currentLesson) opt.selected = true;
+                lessonSelect.appendChild(opt);
+            });
+
+            populateSubtopicDropdown();
+        }
+
+        function onLessonChange() {
+            document.getElementById('selectSubtopic').value = 'all';
+            populateSubtopicDropdown();
+            renderLinksGrid();
+        }
+
+        function populateSubtopicDropdown() {
+            const selectedGrade = document.getElementById('selectGrade').value;
+            const selectedLesson = document.getElementById('selectLesson').value;
+            const subSelect = document.getElementById('selectSubtopic');
+            const currentSub = subSelect.value;
+
+            let filtered = allLinks;
+            if (selectedGrade !== 'all') {
+                filtered = filtered.filter(l => l.grade.trim() === selectedGrade);
+            }
+            if (selectedLesson !== 'all') {
+                filtered = filtered.filter(l => l.lesson.trim() === selectedLesson);
+            }
+
+            const uniqueSubtopics = Array.from(new Set(filtered.map(l => l.subtopic.trim()))).filter(Boolean);
+
+            subSelect.innerHTML = '<option value="all">🎯 គ្រប់ចំណុចទាំងអស់</option>';
+            uniqueSubtopics.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub;
+                opt.textContent = sub;
+                if (sub === currentSub) opt.selected = true;
+                subSelect.appendChild(opt);
+            });
+        }
+
+        function resetAllFilters() {
+            document.getElementById('selectGrade').value = 'all';
+            document.getElementById('selectLesson').value = 'all';
+            document.getElementById('selectSubtopic').value = 'all';
+            document.getElementById('searchInput').value = '';
+            populateGradeDropdown();
+            renderLinksGrid();
+        }
+
+        // ================= RENDER LINK CARDS =================
+        function renderLinksGrid() {
+            const grid = document.getElementById('linksGrid');
+            const emptyNotice = document.getElementById('emptyNotice');
+            const gradeVal = document.getElementById('selectGrade').value;
+            const lessonVal = document.getElementById('selectLesson').value;
+            const subtopicVal = document.getElementById('selectSubtopic').value;
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            grid.innerHTML = '';
+
+            let filtered = allLinks;
+
+            if (gradeVal !== 'all') {
+                filtered = filtered.filter(l => l.grade.trim() === gradeVal);
+            }
+            if (lessonVal !== 'all') {
+                filtered = filtered.filter(l => l.lesson.trim() === lessonVal);
+            }
+            if (subtopicVal !== 'all') {
+                filtered = filtered.filter(l => l.subtopic.trim() === subtopicVal);
+            }
+            if (search) {
+                filtered = filtered.filter(l => 
+                    l.grade.toLowerCase().includes(search) ||
+                    l.lesson.toLowerCase().includes(search) ||
+                    l.subtopic.toLowerCase().includes(search) ||
+                    (l.desc && l.desc.toLowerCase().includes(search))
+                );
+            }
+
+            document.getElementById('visibleCountBadge').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                emptyNotice.classList.remove('hidden');
+                return;
+            } else {
+                emptyNotice.classList.add('hidden');
+            }
+
+            filtered.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.setAttribute('data-id', item.id);
+                card.className = "gold-card rounded-3xl p-5 flex flex-col justify-between space-y-4 transition-all duration-300 group relative";
+
+                let typeBadge = '';
+                if (item.type === 'quiz') {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[10px] font-bold"><i class="fa-solid fa-pen-to-square mr-1"></i>តេស្តសមត្ថភាព</span>`;
+                } else if (item.type === 'portal') {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold"><i class="fa-solid fa-receipt mr-1"></i>វិក្កយបត្រសិស្ស</span>`;
+                } else if (item.type === 'collector') {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-[10px] font-bold"><i class="fa-solid fa-chart-simple mr-1"></i>ប្រមូលពិន្ទុ</span>`;
+                } else {
+                    typeBadge = `<span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-[10px] font-bold"><i class="fa-solid fa-book mr-1"></i>ឯកសារមេរៀន</span>`;
+                }
+
+                const dragHandleHtml = isAdmin ? `
+                    <span class="drag-handle px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 text-xs flex items-center gap-1" title="ចាប់អូសប្តូរទីតាំង">
+                        <i class="fa-solid fa-grip-vertical"></i>
+                        <span class="text-[10px] font-mono font-bold">#${idx + 1}</span>
+                    </span>
+                ` : '';
+
+                const adminControls = isAdmin ? `
+                    <div class="flex items-center gap-1">
+                        <button onclick="moveCardOrder('${item.id}', -1)" ${idx === 0 ? 'disabled' : ''} title="រំកិលទៅមុខ (ឆ្វេង/លើ)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-amber-500/30 disabled:opacity-30 text-amber-300 flex items-center justify-center text-xs transition">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button onclick="moveCardOrder('${item.id}', 1)" ${idx === filtered.length - 1 ? 'disabled' : ''} title="រំកិលទៅក្រោយ (ស្តាំ/ក្រោម)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-amber-500/30 disabled:opacity-30 text-amber-300 flex items-center justify-center text-xs transition">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <button onclick="deleteLink('${item.id}', '${item.subtopic.replace(/'/g, "\'")}')" title="លុបលីង" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-rose-500/30 text-rose-400 flex items-center justify-center text-xs transition">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                ` : '';
+
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5">
+                                ${dragHandleHtml}
+                                <span class="px-2.5 py-0.5 rounded-lg bg-white/10 text-amber-200 font-bold text-[11px]">
+                                    ${item.grade}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                ${typeBadge}
+                                ${adminControls}
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <p class="text-[11px] font-semibold text-amber-400/80">${item.lesson}</p>
+                            <h3 class="font-bold text-base text-white group-hover:text-amber-300 transition-colors leading-snug">
+                                ${item.subtopic}
+                            </h3>
+                        </div>
+
+                        ${item.desc ? `<p class="text-xs text-slate-400 leading-relaxed line-clamp-2">${item.desc}</p>` : ''}
+                        <div class="text-[10px] font-mono text-emerald-400/80 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5 truncate" title="${item.url}">
+                            <i class="fa-solid fa-link mr-1 text-slate-500"></i>${item.url}
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-amber-500/15 flex items-center gap-1.5">
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="flex-1 gold-button py-2.5 px-3 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-1.5">
+                            <span>បើកតេស្ត</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                        </a>
+                        <button onclick="requestEditLink('${item.id}')" title="កែប្រែតំណភ្ជាប់ (Edit Link)" class="px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold transition flex items-center gap-1 shrink-0">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Edit</span>
+                        </button>
+                        <button onclick="copyLinkUrl('${item.url}', this)" title="ចម្លងលីងផ្ញើឱ្យសិស្ស" class="px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-700 text-xs font-semibold transition flex items-center gap-1 shrink-0">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            initDragAndDrop();
+        }
+
+        function initDragAndDrop() {
+            const grid = document.getElementById('linksGrid');
+            if (sortableInstance) {
+                sortableInstance.destroy();
+                sortableInstance = null;
+            }
+            if (!isAdmin || !grid) return;
+
+            sortableInstance = new Sortable(grid, {
+                animation: 200,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                onEnd: async function () {
+                    await persistCurrentGridOrder();
+                }
+            });
+        }
+
+        async function persistCurrentGridOrder() {
+            const grid = document.getElementById('linksGrid');
+            const cards = Array.from(grid.children);
+            const visibleIds = cards.map(c => c.getAttribute('data-id')).filter(Boolean);
+
+            if (visibleIds.length === 0) return;
+
+            const visibleSet = new Set(visibleIds);
+            const reorderedVisibleItems = visibleIds.map(id => allLinks.find(item => item.id === id)).filter(Boolean);
+
+            let vIndex = 0;
+            const newAllLinks = allLinks.map(item => {
+                if (visibleSet.has(item.id)) {
+                    return reorderedVisibleItems[vIndex++];
+                }
+                return item;
+            });
+
+            allLinks = newAllLinks;
+            renderLinksGrid();
+
+            try {
+                const batch = db.batch();
+                allLinks.forEach((item, index) => {
+                    const ref = db.collection(COLLECTION_NAME).doc(item.id);
+                    batch.update(ref, { order: index });
+                });
+                await batch.commit();
+            } catch (err) {
+                console.error("Failed to save order:", err);
+                alert("មានបញ្ហាក្នុងការរក្សាទុកលំដាប់ថ្មី!");
+            }
+        }
+
+        async function moveCardOrder(id, direction) {
+            const grid = document.getElementById('linksGrid');
+            const cards = Array.from(grid.children);
+            const currentIndex = cards.findIndex(c => c.getAttribute('data-id') === id);
+            const targetIndex = currentIndex + direction;
+
+            if (currentIndex < 0 || targetIndex < 0 || targetIndex >= cards.length) return;
+
+            const currentCard = cards[currentIndex];
+            const targetCard = cards[targetIndex];
+
+            if (direction < 0) {
+                grid.insertBefore(currentCard, targetCard);
+            } else {
+                grid.insertBefore(targetCard, currentCard);
+            }
+
+            await persistCurrentGridOrder();
+        }
+
+        function copyLinkUrl(url, btn) {
+            navigator.clipboard.writeText(url).then(() => {
+                const origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i><span class="text-emerald-400">Copied</span>';
+                setTimeout(() => {
+                    btn.innerHTML = origHtml;
+                }, 1500);
+            });
+        }
+
+        // ================= TEACHER ADMIN MODE =================
+        function toggleAdminMode() {
+            if (isAdmin) {
+                isAdmin = false;
+                document.getElementById('adminAddBar').classList.add('hidden');
+                document.getElementById('adminLockIcon').className = 'fa-solid fa-lock';
+                document.getElementById('adminBtnText').innerText = 'គ្រប់គ្រងលីង (គ្រូ)';
+                renderLinksGrid();
+            } else {
+                document.getElementById('adminPinInput').value = '';
+                document.getElementById('adminPinModal').classList.remove('hidden');
+                document.getElementById('adminPinModal').classList.add('flex');
+                document.getElementById('adminPinInput').focus();
+            }
+        }
+
+        function closeAdminPinModal() {
+            document.getElementById('adminPinModal').classList.add('hidden');
+            document.getElementById('adminPinModal').classList.remove('flex');
+            pendingEditId = null;
+        }
+
+        function requestEditLink(id) {
+            if (isAdmin) {
+                openEditLinkModal(id);
+            } else {
+                pendingEditId = id;
+                document.getElementById('adminPinInput').value = '';
+                document.getElementById('adminPinModal').classList.remove('hidden');
+                document.getElementById('adminPinModal').classList.add('flex');
+                document.getElementById('adminPinInput').focus();
+            }
+        }
+
+        function verifyAdminPin() {
+            const entered = document.getElementById('adminPinInput').value.trim();
+            const savedPin = localStorage.getItem('tutortrack_pin') || '1234';
+            if (entered === savedPin) {
+                isAdmin = true;
+                closeAdminPinModal();
+                document.getElementById('adminAddBar').classList.remove('hidden');
+                document.getElementById('adminLockIcon').className = 'fa-solid fa-unlock text-emerald-400';
+                document.getElementById('adminBtnText').innerText = 'ចាកចេញពីគ្រូ';
+                renderLinksGrid();
+
+                if (pendingEditId) {
+                    const targetId = pendingEditId;
+                    pendingEditId = null;
+                    openEditLinkModal(targetId);
+                }
+            } else {
+                alert('លេខកូដ PIN មិនត្រឹមត្រូវឡើយ!');
+                document.getElementById('adminPinInput').value = '';
+            }
+        }
+
+        // ================= CUSTOM LESSON OPTIONS MANAGER (CLOUD SYNCED) =================
+        function listenToLessonOptions() {
+            LESSONS_DOC_REF.onSnapshot(async doc => {
+                if (!doc.exists) {
+                    await LESSONS_DOC_REF.set({ lessons: defaultLessonsList });
+                    savedLessonOptions = [...defaultLessonsList];
+                } else {
+                    const data = doc.data();
+                    savedLessonOptions = Array.isArray(data.lessons) && data.lessons.length > 0
+                        ? data.lessons
+                        : [...defaultLessonsList];
+                }
+                renderCustomLessonDropdown();
+                renderManageLessonsList();
+            }, err => {
+                console.error("Lesson options sync error:", err);
+            });
+        }
+
+        function getAllMergedLessons() {
+            const fromLinks = allLinks.map(l => (l.lesson || '').trim()).filter(Boolean);
+            const merged = [...savedLessonOptions];
+            fromLinks.forEach(les => {
+                if (!merged.includes(les)) merged.push(les);
+            });
+            return merged;
+        }
+
+        function toggleLessonDropdown(forceState) {
+            const menu = document.getElementById('customLessonMenu');
+            if (typeof forceState === 'boolean') {
+                if (forceState) {
+                    renderCustomLessonDropdown();
+                    menu.classList.remove('hidden');
+                } else {
+                    menu.classList.add('hidden');
+                }
+            } else {
+                renderCustomLessonDropdown();
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        function filterLessonDropdown() {
+            const menu = document.getElementById('customLessonMenu');
+            menu.classList.remove('hidden');
+            renderCustomLessonDropdown(document.getElementById('inputLesson').value.trim().toLowerCase());
+        }
+
+        function renderCustomLessonDropdown(filterText = '') {
+            const listEl = document.getElementById('customLessonList');
+            if (!listEl) return;
+            const lessons = getAllMergedLessons().filter(l => l.toLowerCase().includes(filterText));
+
+            if (lessons.length === 0) {
+                listEl.innerHTML = `<div class="px-3 py-3 text-center text-[11px] text-slate-400">មិនមានមេរៀនត្រូវនឹងការស្វែងរកទេ — លោកគ្រូអាចបន្ថែមថ្មីខាងក្រោម</div>`;
+                return;
+            }
+
+            listEl.innerHTML = lessons.map(les => `
+                <div class="flex items-center justify-between px-3 py-2 hover:bg-amber-500/15 transition group">
+                    <button type="button" onclick="selectLessonOption('${les.replace(/'/g, "\'")}')" class="flex-1 text-left text-xs font-semibold text-slate-100 group-hover:text-amber-300 truncate pr-2">
+                        ${les}
+                    </button>
+                    <button type="button" onclick="openManageLessonsModal('${les.replace(/'/g, "\'")}')" title="កែប្រែឈ្មោះមេរៀននេះ" class="opacity-70 hover:opacity-100 px-2 py-1 rounded-md bg-slate-800 hover:bg-amber-500/30 text-amber-300 text-[10px] font-bold transition shrink-0">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function selectLessonOption(lessonName) {
+            document.getElementById('inputLesson').value = lessonName;
+            toggleLessonDropdown(false);
+        }
+
+        async function quickAddLessonFromDropdown() {
+            const inp = document.getElementById('quickAddLessonInput');
+            const val = inp.value.trim();
+            if (!val) return;
+            if (!savedLessonOptions.includes(val)) {
+                savedLessonOptions.push(val);
+                await LESSONS_DOC_REF.set({ lessons: savedLessonOptions });
+            }
+            document.getElementById('inputLesson').value = val;
+            inp.value = '';
+            toggleLessonDropdown(false);
+        }
+
+        function openManageLessonsModal(highlightLesson = '') {
+            toggleLessonDropdown(false);
+            renderManageLessonsList(highlightLesson);
+            document.getElementById('manageLessonsModal').classList.remove('hidden');
+            document.getElementById('manageLessonsModal').classList.add('flex');
+        }
+
+        function closeManageLessonsModal() {
+            document.getElementById('manageLessonsModal').classList.add('hidden');
+            document.getElementById('manageLessonsModal').classList.remove('flex');
+            renderCustomLessonDropdown();
+        }
+
+        function renderManageLessonsList(highlightLesson = '') {
+            const container = document.getElementById('manageLessonsList');
+            if (!container) return;
+            const lessons = getAllMergedLessons();
+
+            container.innerHTML = lessons.map((les, idx) => {
+                const isHighlighted = (les === highlightLesson);
+                return `
+                    <div id="lessonRow_${idx}" class="p-2.5 rounded-xl border ${isHighlighted ? 'border-amber-400 bg-amber-500/15' : 'border-white/10 bg-black/40'} flex items-center justify-between gap-2">
+                        <span id="lessonLabel_${idx}" class="text-xs font-semibold text-slate-100 flex-1 break-words">${les}</span>
+                        <input id="lessonEditInput_${idx}" type="text" value="${les.replace(/"/g, '&quot;')}" class="hidden flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-amber-400 text-white text-xs font-semibold focus:outline-none">
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button type="button" onclick="selectLessonAndClose('${les.replace(/'/g, "\'")}')" title="ជ្រើសរើសមេរៀននេះ" class="px-2 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold transition">
+                                ជ្រើស
+                            </button>
+                            <button type="button" id="btnEditLesson_${idx}" onclick="startInlineEditLesson(${idx})" title="កែប្រែឈ្មោះមេរៀន" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-amber-500/30 text-amber-300 flex items-center justify-center text-xs transition">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button type="button" id="btnSaveLesson_${idx}" onclick="saveInlineEditLesson(${idx}, '${les.replace(/'/g, "\'")}')" title="រក្សាទុកការកែប្រែ" class="hidden w-7 h-7 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center text-xs transition">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button type="button" onclick="deleteLessonOption('${les.replace(/'/g, "\'")}')" title="លុបមេរៀនចេញពីបញ្ជី" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-rose-500/30 text-rose-400 flex items-center justify-center text-xs transition">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (highlightLesson) {
+                const targetIdx = lessons.indexOf(highlightLesson);
+                if (targetIdx !== -1) startInlineEditLesson(targetIdx);
+            }
+        }
+
+        function selectLessonAndClose(les) {
+            document.getElementById('inputLesson').value = les;
+            closeManageLessonsModal();
+        }
+
+        function startInlineEditLesson(idx) {
+            document.getElementById(`lessonLabel_${idx}`).classList.add('hidden');
+            const inp = document.getElementById(`lessonEditInput_${idx}`);
+            inp.classList.remove('hidden');
+            inp.focus();
+            inp.select();
+            document.getElementById(`btnEditLesson_${idx}`).classList.add('hidden');
+            document.getElementById(`btnSaveLesson_${idx}`).classList.remove('hidden');
+        }
+
+        async function saveInlineEditLesson(idx, oldName) {
+            const newName = document.getElementById(`lessonEditInput_${idx}`).value.trim();
+            if (!newName) return;
+
+            const merged = getAllMergedLessons();
+            const updatedList = merged.map(item => (item === oldName ? newName : item));
+            savedLessonOptions = Array.from(new Set(updatedList));
+
+            try {
+                await LESSONS_DOC_REF.set({ lessons: savedLessonOptions });
+
+                // Also update existing links in Firestore that used the old lesson name
+                const matchingLinks = allLinks.filter(l => (l.lesson || '').trim() === oldName);
+                if (matchingLinks.length > 0) {
+                    const batch = db.batch();
+                    matchingLinks.forEach(link => {
+                        batch.update(db.collection(COLLECTION_NAME).doc(link.id), { lesson: newName });
+                    });
+                    await batch.commit();
+                }
+
+                if (document.getElementById('inputLesson').value.trim() === oldName) {
+                    document.getElementById('inputLesson').value = newName;
+                }
+                renderManageLessonsList();
+            } catch (err) {
+                console.error("Failed to rename lesson:", err);
+                alert("មានបញ្ហាក្នុងការកែប្រែឈ្មោះមេរៀន!");
+            }
+        }
+
+        async function addNewLessonOption() {
+            const inp = document.getElementById('newLessonNameInput');
+            const val = inp.value.trim();
+            if (!val) return;
+            const merged = getAllMergedLessons();
+            if (!merged.includes(val)) {
+                savedLessonOptions = [...merged, val];
+                await LESSONS_DOC_REF.set({ lessons: savedLessonOptions });
+            }
+            inp.value = '';
+            renderManageLessonsList();
+        }
+
+        async function deleteLessonOption(lessonName) {
+            if (!confirm(`តើលោកគ្រូចង់លុប «${lessonName}» ចេញពីបញ្ជីជម្រើសមេរៀនមែនទេ?`)) return;
+            const merged = getAllMergedLessons();
+            savedLessonOptions = merged.filter(l => l !== lessonName);
+            await LESSONS_DOC_REF.set({ lessons: savedLessonOptions });
+            renderManageLessonsList();
+        }
+
+        // Close custom lesson menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const container = document.getElementById('lessonDropdownContainer');
+            const menu = document.getElementById('customLessonMenu');
+            if (container && menu && !container.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // ================= ADD / EDIT / DELETE LINK =================
+        function openAddLinkModal() {
+            document.getElementById('editLinkId').value = '';
+            document.getElementById('linkForm').reset();
+            document.getElementById('btnModalDelete').classList.add('hidden');
+            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-link"></i> បន្ថែមលីងតេស្ត / មេរៀនថ្មី';
+            document.getElementById('linkModal').classList.remove('hidden');
+            document.getElementById('linkModal').classList.add('flex');
+        }
+
+        function openEditLinkModal(id) {
+            const item = allLinks.find(l => l.id === id);
+            if (!item) return;
+
+            document.getElementById('editLinkId').value = item.id;
+            document.getElementById('inputGrade').value = item.grade;
+            document.getElementById('inputType').value = item.type || 'quiz';
+            document.getElementById('inputLesson').value = item.lesson;
+            document.getElementById('inputSubtopic').value = item.subtopic;
+            document.getElementById('inputUrl').value = item.url;
+            document.getElementById('inputDesc').value = item.desc || '';
+
+            document.getElementById('btnModalDelete').classList.remove('hidden');
+            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> កែសម្រួលតំណភ្ជាប់';
+            document.getElementById('linkModal').classList.remove('hidden');
+            document.getElementById('linkModal').classList.add('flex');
+        }
+
+        function closeLinkModal() {
+            document.getElementById('linkModal').classList.add('hidden');
+            document.getElementById('linkModal').classList.remove('flex');
+        }
+
+        async function handleSaveLink(e) {
+            e.preventDefault();
+            const id = document.getElementById('editLinkId').value;
+            const grade = document.getElementById('inputGrade').value.trim();
+            const type = document.getElementById('inputType').value;
+            const lesson = document.getElementById('inputLesson').value.trim();
+            const subtopic = document.getElementById('inputSubtopic').value.trim();
+            const url = document.getElementById('inputUrl').value.trim();
+            const desc = document.getElementById('inputDesc').value.trim();
+
+            if (!grade || !lesson || !subtopic || !url) return;
+
+            // Automatically save any newly typed lesson into the cloud lesson list
+            if (!savedLessonOptions.includes(lesson)) {
+                savedLessonOptions.push(lesson);
+                LESSONS_DOC_REF.set({ lessons: savedLessonOptions }).catch(() => {});
+            }
+
+            const payload = {
+                grade, type, lesson, subtopic, url, desc,
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                if (id) {
+                    await db.collection(COLLECTION_NAME).doc(id).update(payload);
+                } else {
+                    payload.createdAt = new Date().toISOString();
+                    payload.order = allLinks.length;
+                    await db.collection(COLLECTION_NAME).add(payload);
+                }
+                closeLinkModal();
+            } catch (err) {
+                console.error("Save link error:", err);
+                alert("មានបញ្ហាក្នុងការរក្សាទុកលីង!");
+            }
+        }
+
+        async function deleteFromEditModal() {
+            const id = document.getElementById('editLinkId').value;
+            const title = document.getElementById('inputSubtopic').value;
+            if (!id) return;
+            if (!confirm(`តើលោកគ្រូពិតជាចង់លុបលីង «${title}» ចេញមែនទេ?`)) return;
+            try {
+                await db.collection(COLLECTION_NAME).doc(id).delete();
+                closeLinkModal();
+            } catch (err) {
+                console.error("Delete link error:", err);
+            }
+        }
+
+        async function deleteLink(id, title) {
+            if (!confirm(`តើលោកគ្រូពិតជាចង់លុបលីង «${title}» ចេញមែនទេ?`)) return;
+            try {
+                await db.collection(COLLECTION_NAME).doc(id).delete();
+            } catch (err) {
+                console.error("Delete link error:", err);
+            }
+        }
+    </script>
+</body>
+</html>
